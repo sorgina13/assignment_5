@@ -179,13 +179,18 @@ class CharCorruptionDataset(Dataset):
         doc_ori = self.data[idx]
         doc_trunc = doc_ori[:random.randint(4,int(self.block_size*3/4))]
         
-        mask = round(len(doc_trunc)*1/4)
-        mu, sigma = mask, 0.1 # mean 1/4 of trunc doc and standard deviation 0.1
-        masked_len = int(random.gauss(mu, sigma))
+        chunk = round(len(doc_trunc)*self.masking_percent)
+        mask = round(chunk*self.masking_percent)
+        #mu, sigma = mask, 0.1 # mean 1/4 of trunc doc and standard deviation 0.1
+        #masked_var = int(random.gauss(mu, sigma))
 
-        prefix_idx = doc_ori[0:masked_len]
-        suffix_idx = doc_ori[mask + masked_len:]
-        masked_idx = doc_ori[masked_len:masked_len + mask]
+
+        rando_mask = random.randint(chunk - mask, mask + chunk)
+        masked_len = random.randint(1, len(doc_trunc) - rando_mask)
+        
+        prefix_idx = doc_trunc[: masked_len]
+        suffix_idx = doc_trunc[rando_mask + masked_len :]
+        masked_idx = doc_trunc[masked_len : masked_len + rando_mask]
         
         x = prefix_idx + self.MASK_CHAR + suffix_idx + self.MASK_CHAR + masked_idx + self.MASK_CHAR 
         x = x + self.PAD_CHAR*(self.block_size - len(x))
