@@ -71,6 +71,7 @@ def finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_
     tconf = TrainerConfig(max_epochs=75, 
         batch_size=256,
         learning_rate=6e-4,
+        lr_decay=True,
         warmup_tokens=512*20,
         final_tokens=200 * len(pretrain_dataset) * block_size,
         num_workers=0)

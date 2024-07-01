@@ -186,7 +186,7 @@ class CharCorruptionDataset(Dataset):
 
 
         rando_mask = random.randint(chunk - mask, mask + chunk)
-        masked_len = random.randint(1, len(doc_trunc) - rando_mask)
+        masked_len = random.randint(1, len(doc_trunc) - rando_mask -1)
         
         prefix_idx = doc_trunc[: masked_len]
         suffix_idx = doc_trunc[rando_mask + masked_len :]
